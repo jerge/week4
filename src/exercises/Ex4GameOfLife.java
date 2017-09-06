@@ -13,6 +13,7 @@ import java.util.Random;
 
 import static java.lang.Math.*;
 import static java.lang.System.*;
+import static oracle.jrockit.jfr.events.Bits.intValue;
 
 /*
  * Program for Conway's game of life.  See https://en.wikipedia.org/wiki/Conway%27s_Game_of_Life
@@ -32,7 +33,7 @@ public class Ex4GameOfLife extends Application {
 
     // Enum type for state of Cells
     enum Cell {
-        DEAD, ALIVE;
+        DEAD, ALIVE
     }
 
     final Random rand = new Random();
@@ -55,7 +56,7 @@ public class Ex4GameOfLife extends Application {
 
     @Override
     public void init() {
-        // test();        // <--------------- Uncomment to test!
+        test();        // <--------------- Uncomment to test!
         int nLocations = 900;
         double distribution = 0.4;   // % of locations holding a Cell
 
@@ -63,6 +64,99 @@ public class Ex4GameOfLife extends Application {
         // TODO get distribution, shuffle and convert to matrix (use above)
 
     }
+
+    private Cell[] generateDistribution(int amount, double prob) {
+        Cell[] distCells = new Cell[amount];
+        double amountAlive = StrictMath.round(amount * prob);
+        for (int i = 0; i < amount; i++) {
+            if (i < amountAlive) {
+                distCells[i] = Cell.ALIVE;
+            } else {
+                distCells[i] = Cell.DEAD;
+            }
+        }
+        return distCells;
+    }
+
+    private Cell[] shuffle(Cell[] arr) {
+        int index;
+        Cell a;
+        for (int i = 0; i < arr.length;i++) {
+            index = rand.nextInt(arr.length);
+            a = arr[i];
+            arr[i] = arr[index];
+            arr[index] = a;
+        }
+        return arr;
+    }
+
+    private Cell[][] toMatrix(Cell[] arr) {
+        int length = intValue(Math.sqrt(arr.length));
+        Cell[][] matrix = new Cell[arr.length/length][length];
+        int count = 0;
+        for (int a = 0; a < arr.length/length; a++) {
+            for (int b = 0; b < length; b++){
+                matrix[a][b] = arr[count];
+                count++;
+            }
+        }
+        return matrix;
+    }
+
+    private boolean isNeighbourAlive(Cell[][] matrix, int offsetY, int offsetX, int row, int col){
+        if (offsetX == 0 && offsetY == 0) {
+            return false;
+        }
+        if (row + offsetY >= 0 && row + offsetY < matrix.length){
+            if (col + offsetX >= 0 && col + offsetX < matrix[offsetY+1].length){
+                if (matrix[row+offsetY][col+offsetX] == Cell.ALIVE) {
+                    return true;
+                }
+            }
+        }
+        return false;
+    }
+
+    private int amountAliveNeighbours(Cell[][] matrix, int row, int col){
+        int amount = 0;
+        for(int offsetY = -1; offsetY < 2;offsetY++){
+            for(int offsetX = -1; offsetX < 2;offsetX++){
+                if (isNeighbourAlive(matrix, offsetY, offsetX, row, col)) {
+                    amount += 1;
+                }
+            }
+        }
+        return amount;
+    }
+
+    private int[][] cellNeighbourValues() {
+        int[][] neighbourValues = new int[world.length-1][world[0].length-1];
+        for (int row = 0; row < world.length; row++) {
+            for (int col = 0; col < world[row].length; col++) {
+                neighbourValues[row][col] = amountAliveNeighbours(world,row,col);
+            }
+        }
+        return neighbourValues;
+    }
+
+    private Cell rulebook(Cell cellState, int neighbours) {
+        if (cellState == Cell.ALIVE && (neighbours < 2 || neighbours > 3)) {
+            return Cell.DEAD;
+        } else if (cellState == Cell.DEAD && neighbours == 3) {
+            return Cell.ALIVE;
+        }
+        return cellState;
+    }
+
+    private void applyRules(int[][] neighbourValues) {
+        for (int row = 0; row < world.length; row++) {
+            for (int col = 0; col < world[row].length; col++) {
+                world[row][col] = rulebook(world[row][col], neighbourValues[row][col]);
+            }
+        }
+    }
+
+
 
 
     // ---------- Testing -----------------
@@ -78,6 +172,7 @@ public class Ex4GameOfLife extends Application {
         };
 
         // TODO test methods here
+        applyRules(cellNeighbourValues());
 
         exit(0);
     }

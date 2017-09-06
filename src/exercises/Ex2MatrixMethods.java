@@ -130,7 +130,7 @@ public class Ex2MatrixMethods {
     }
 
     private int sumNeighbours(int[][] matrix, int row, int col){
-        int sum = -(matrix[row][col]);
+        int sum = 0;
         for(int offsetY = -1; offsetY < 2;offsetY++){
             for(int offsetX = -1; offsetX < 2;offsetX++){
                 sum += neighbours(matrix, offsetY, offsetX, row, col);
@@ -140,6 +140,9 @@ public class Ex2MatrixMethods {
     }
 
     private int neighbours(int[][] matrix, int offsetY, int offsetX, int row, int col){
+        if (offsetX == 0 && offsetY == 0) {
+            return 0;
+        }
         if (row + offsetY >= 0 && row + offsetY < matrix.length){
             if (col + offsetX >= 0 && col + offsetX < matrix[offsetY+1].length){
                 return matrix[row+offsetY][col+offsetX];
