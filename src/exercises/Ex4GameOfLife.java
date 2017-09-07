@@ -9,6 +9,7 @@ import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.paint.Color;
 import javafx.stage.Stage;
 
+import java.util.Arrays;
 import java.util.Random;
 
 import static java.lang.Math.*;
@@ -47,22 +48,25 @@ public class Ex4GameOfLife extends Application {
     void updateWorld() {
 
         // TODO update the "world"
+        applyRules(cellNeighbourValues());
     }
 
-    // -------- Write methods below this --------------
+//     -------- Write methods below this --------------
 
 
 
 
     @Override
     public void init() {
-        test();        // <--------------- Uncomment to test!
+//        test();        // <--------------- Uncomment to test!
         int nLocations = 900;
         double distribution = 0.4;   // % of locations holding a Cell
 
 
         // TODO get distribution, shuffle and convert to matrix (use above)
-
+        Cell[] cells = generateDistribution(nLocations, distribution);
+        cells = shuffle(cells);
+        world = toMatrix(cells);
     }
 
     private Cell[] generateDistribution(int amount, double prob) {
@@ -130,7 +134,7 @@ public class Ex4GameOfLife extends Application {
     }
 
     private int[][] cellNeighbourValues() {
-        int[][] neighbourValues = new int[world.length-1][world[0].length-1];
+        int[][] neighbourValues = new int[world.length][world[0].length];
         for (int row = 0; row < world.length; row++) {
             for (int col = 0; col < world[row].length; col++) {
                 neighbourValues[row][col] = amountAliveNeighbours(world,row,col);
@@ -156,6 +160,12 @@ public class Ex4GameOfLife extends Application {
         }
     }
 
+    void plot(Cell[][] matrix) {
+        for (int row = 0; row < matrix.length; row++) {
+            out.println(Arrays.toString(matrix[row]));
+        }
+    }
+
 
 
 
@@ -164,14 +174,23 @@ public class Ex4GameOfLife extends Application {
     // to see that they really work
     void test() {
         // Hard coded test world
-        Cell[][] world = {
-                {Cell.ALIVE, Cell.ALIVE, Cell.DEAD},
-                {Cell.ALIVE, Cell.DEAD, Cell.DEAD},
-                {Cell.DEAD, Cell.DEAD, Cell.ALIVE},
-
-        };
+//        Cell[][] world = {
+//                {Cell.ALIVE, Cell.ALIVE, Cell.DEAD},
+//                {Cell.ALIVE, Cell.DEAD, Cell.DEAD},
+//                {Cell.DEAD, Cell.DEAD, Cell.ALIVE},
+//
+//        };
 
         // TODO test methods here
+        int nLocations = 900;
+        double distribution = 0.4;   // % of locations holding a Cell
+
+
+        // TODO get distribution, shuffle and convert to matrix (use above)
+        Cell[] cells = generateDistribution(nLocations, distribution);
+        cells = shuffle(cells);
+        world = toMatrix(cells);
+        plot(world);
         applyRules(cellNeighbourValues());
 
         exit(0);
