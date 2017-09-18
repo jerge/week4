@@ -31,6 +31,17 @@ public class Ex2Argots {
 
     // ---------- Methods --------------------
 
+    private String toRobber(String text) {
+        String[] consonante = {"b","c","d","f","g","h","j","k","l","m","n","p","q","r","s","t","v","w","x","z"};
+        String robberized = "";
+        for (int i = 0; i < text.length(); i++) {
+            for (String cons : consonante) {
+                
+            }
+        }
+        return robberized;
+    }
+
 
 
 

@@ -1,5 +1,6 @@
 package exercises;
 
+import java.util.Arrays;
 import java.util.Scanner;
 
 import static java.lang.System.in;
@@ -20,7 +21,7 @@ public class Ex1WordCount {
     }
 
     void program() {
-        /*out.println(countWords("") == 0);
+        out.println(countWords("") == 0);
         out.println(countWords("hello") == 1);
         out.println(countWords(" hello ") == 1);
         out.println(countWords("hello world") == 2);
@@ -28,7 +29,18 @@ public class Ex1WordCount {
         out.println(countWords("   hello        world  ") == 2);
         String s = "Education is what remains after one has forgotten what one has learned in school.";
         out.println(countWords(s) == 14);
-        */
+
+    }
+
+    private int countWords(String sentence) {
+        String[] words = sentence.split(" ");
+        int count = 0;
+        for (String word : words) {
+            if (!word.equals("")) {
+                count++;
+            }
+        }
+        return count;
     }
 
 
