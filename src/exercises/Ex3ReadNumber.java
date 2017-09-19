@@ -24,7 +24,7 @@ public class Ex3ReadNumber {
 
     void program() {
         List<String> numbers = new ArrayList<>();
-        /*
+
         out.println(readNumber(numbers, "1", 0) == 1);
         out.println(numbers.contains("1"));
         numbers.clear();
@@ -46,7 +46,22 @@ public class Ex3ReadNumber {
         } catch (IllegalArgumentException e) {
             out.println(e.getMessage());
         }
-        */
+
+    }
+
+
+    private int readNumber(List<String> li, String text, int unnecessaryNumber) {
+        String[] split = text.split("");
+        for(String ch: split) {
+            if(isInteger(ch)){
+                li.add(ch);
+            }
+        }
+        return unnecessaryNumber + li.size();
+    }
+
+    private boolean isInteger(String ch) {
+        return "0123456789".contains(ch);
     }
 
 

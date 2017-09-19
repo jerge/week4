@@ -1,8 +1,11 @@
 package exercises;
 
+import com.sun.org.apache.bcel.internal.generic.IF_ACMPEQ;
+
 import java.util.ArrayDeque;
 import java.util.Deque;
 import java.util.Scanner;
+import java.util.Stack;
 
 import static java.lang.System.in;
 import static java.lang.System.out;
@@ -38,7 +41,31 @@ public class Ex4CheckParen {
 
     // Can handle {}, () and []
     boolean checkParentheses(String expr) {
-        return false;
+        expr = expr.trim();
+        Stack<Character> grabb = new Stack();
+        grabb.push(' ');
+        for (char ch : expr.toCharArray()) {
+            if(isClosed(ch)) {
+                if (matching(ch) != grabb.peek()) {
+                    return false;
+                } else {
+                    grabb.pop();
+                }
+            } else if (isOpen(ch)) {
+                grabb.push(ch);
+            }
+
+        }
+        grabb.pop();
+        return grabb.isEmpty();
+    }
+
+    private boolean isOpen(char ch) {
+        return "({[".indexOf(ch) > -1;
+    }
+
+    private boolean isClosed(char ch) {
+        return ")]}".indexOf(ch) > -1;
     }
 
     // This is interesting because have to return, but what if no match?!?
